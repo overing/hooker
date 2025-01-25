@@ -6,15 +6,21 @@ namespace Hooker.Core;
 
 sealed class KeyboardBehaviorSimulator(ILogger<KeyboardBehaviorSimulator> logger) : BehaviorSimulator(logger)
 {
-    KeyCode _keyCode;
+    static readonly IReadOnlyList<KeyCode> AllowKeys =
+    [
+        KeyCode.Vc3,
+        KeyCode.Vc4,
+        KeyCode.Vc5,
+        KeyCode.Vc6,
+        KeyCode.Vc7,
+        KeyCode.Vc8,
+        KeyCode.Vc9,
+        KeyCode.Vc0,
+    ];
 
     protected override async ValueTask ActionAsync(EventSimulator simulator, CancellationToken cancellationToken)
     {
-        KeyCode newKeyCode;
-        do
-            newKeyCode = KeyCode.Vc1 + (ushort)Random.Shared.Next(4);
-        while (newKeyCode == _keyCode);
-        _keyCode = newKeyCode;
-        await simulator.SimulateKeyClickAsync(_keyCode, 40, 80, cancellationToken);
+        var newKeyCode = AllowKeys[Random.Shared.Next(0, AllowKeys.Count)];
+        await simulator.SimulateKeyClickAsync(newKeyCode, 22, 80, cancellationToken);
     }
 }
