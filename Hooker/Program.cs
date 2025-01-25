@@ -12,6 +12,7 @@ builder.Logging.AddSimpleConsole(options =>
     options.IncludeScopes = true;
     options.TimestampFormat = "[HH:mm:ss.fff] ";
     options.ColorBehavior = LoggerColorBehavior.Enabled;
+    options.SingleLine = true;
 });
 
 builder.Services.AddHookerCore();

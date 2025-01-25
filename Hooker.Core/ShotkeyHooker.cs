@@ -14,14 +14,17 @@ public sealed class ShotkeyHooker(
         var hook = new TaskPoolGlobalHook();
         hook.MouseReleased += OnMouseReleased;
         hook.MouseMoved += OnMouseMoved;
-        hook.KeyReleased += OnKeyReleased;
         return hook.RunAsync();
     }
 
-    void ResumeBehaviors()
+    void ResumeBehaviors(bool keyboardOnly)
     {
         foreach (var behavior in _behaviors)
+        {
+            if (keyboardOnly && behavior is not KeyboardBehaviorSimulator)
+                continue;
             behavior.Resume();
+        }
     }
 
     void PauseBehaviors()
@@ -35,28 +38,14 @@ public sealed class ShotkeyHooker(
         switch (eventArgs.RawEvent.Mouse.Button)
         {
             case MouseButton.Button5:
-                ResumeBehaviors();
+                ResumeBehaviors(keyboardOnly: false);
                 break;
 
             case MouseButton.Button4:
-                PauseBehaviors();
+                ResumeBehaviors(keyboardOnly: true);
                 break;
         }
     }
 
     void OnMouseMoved(object? sender, MouseHookEventArgs eventArgs) => PauseBehaviors();
-
-    void OnKeyReleased(object? sender, KeyboardHookEventArgs eventArgs)
-    {
-        switch (eventArgs.RawEvent.Keyboard.KeyCode)
-        {
-            case KeyCode.VcF2:
-                ResumeBehaviors();
-                break;
-
-            case KeyCode.VcF3:
-                PauseBehaviors();
-                break;
-        }
-    }
 }
