@@ -6,7 +6,7 @@ namespace Hooker.Core;
 
 public interface IBehaviorSimulator
 {
-    void Resume();
+    void Resume(ResumeArguments args);
     void Pause();
 }
 
@@ -14,7 +14,9 @@ abstract class BehaviorSimulator(ILogger logger) : BackgroundService, IBehaviorS
 {
     CancellationTokenSource _pausedTokenSource = new();
 
-    EventSimulator _simulator = new();
+    readonly EventSimulator _simulator = new();
+
+    readonly Random _random = new();
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
@@ -27,28 +29,38 @@ abstract class BehaviorSimulator(ILogger logger) : BackgroundService, IBehaviorS
 
             await ActionAsync(_simulator, stoppingToken);
 
-            await Task.Delay(Random.Shared.Next(40, 80), stoppingToken);
+            await Task.Delay(_random.Next(40, 80), stoppingToken);
         }
     }
 
-    public void Resume()
+    public void Resume(ResumeArguments args)
     {
         if (!_pausedTokenSource.IsCancellationRequested)
             return;
 
         logger.LogInformation(nameof(Resume));
+
         _pausedTokenSource.Dispose();
         _pausedTokenSource = new();
+
+        OnResume(args);
     }
+
+    protected virtual void OnResume(ResumeArguments args) { }
 
     public void Pause()
     {
         if (_pausedTokenSource.IsCancellationRequested)
             return;
 
-        logger.LogInformation(nameof(Pause));
         _pausedTokenSource.Cancel();
+
+        OnPause();
+
+        logger.LogInformation(nameof(Pause));
     }
+
+    protected virtual void OnPause() { }
 
     protected abstract ValueTask ActionAsync(EventSimulator simulator, CancellationToken cancellationToken);
 }

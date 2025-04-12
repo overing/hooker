@@ -6,7 +6,7 @@
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "dotnet: build",
-            "program": "${workspaceFolder}/Hooker/bin/Debug/net8.0/Hooker.exe",
+            "program": "${workspaceFolder}/Hooker/bin/Debug/net9.0/Hooker.exe",
             "cwd": "${workspaceFolder}",
             "stopAtEntry": false,
             "console": "externalTerminal"
