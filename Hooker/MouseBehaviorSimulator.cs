@@ -40,6 +40,6 @@ sealed class MouseBehaviorSimulator(ILogger<MouseBehaviorSimulator> logger) : Be
             simulator.SimulateMouseMovement(x, y);
         }
 
-        return simulator.SimulateMouseClickAsync(MouseButton.Button1, 33, 80, cancellationToken);
+        return simulator.SimulateMouseClickAsync(MouseButton.Button2, 16, 40, cancellationToken);
     }
 }

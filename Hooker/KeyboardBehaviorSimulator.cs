@@ -21,6 +21,6 @@ sealed class KeyboardBehaviorSimulator(ILogger<KeyboardBehaviorSimulator> logger
     protected override async ValueTask ActionAsync(EventSimulator simulator, CancellationToken cancellationToken)
     {
         var newKeyCode = AllowKeys[Random.Shared.Next(0, AllowKeys.Count)];
-        await simulator.SimulateKeyClickAsync(newKeyCode, 22, 80, cancellationToken);
+        await simulator.SimulateKeyClickAsync(newKeyCode, 11, 40, cancellationToken);
     }
 }
